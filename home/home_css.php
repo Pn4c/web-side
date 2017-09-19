@@ -58,11 +58,6 @@ body{
 	background-color:rgba(226,62,87,0.7);
 	border:0px;
 }
-a, a:hover{
-	opacity:1;
-	color:rgba(90,90,90,1);
-	text-decoration: none !important;
-}
 @-webkit-keyframes fadeout {
 	 from {
 		background-color:rgba(255,255,255,1);

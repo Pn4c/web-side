@@ -1,10 +1,13 @@
 <?php include '../show_error.php'; ?>
 <html>
 <head>
+	<?php include "../static/system_variables.php";?>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=<?php echo $font_family;?>">
+	
 	<link rel="stylesheet" href="profile_header_css.php" style="text/css">
 </head>
 <body>
-<header>
+<header style="font-size: 13px;font-family:<?php echo $font_family;?>;">
 		<div class="row">
 			<div class="col-md-2 col-md-offset-5">
 				<div class="brand" style="opacity:1;"><img style="width:140px;height:140px;margin:30px;margin-bottom:0px;border-radius:70px;" src="<?php echo profileImage(); ?>"></div>
@@ -47,8 +50,8 @@
 <?php
 	
 	if(isset($_POST['button_myprofile'])){
-		$_SESSION['searched_user'] = $_COOKIE['NickName'];
-		header("location:../profile_others/profile_other.php");
+		$nickName = $_COOKIE['NickName'];
+		header("location:../profile_others/profile_other.php?u=$nickName");
 	}
 
 	function num_follow($searched_user){

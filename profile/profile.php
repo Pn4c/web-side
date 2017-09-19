@@ -15,6 +15,9 @@ if(isset($_FILES["fileToUpload"]["name"])){
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
         
+        <?php include "../static/system_variables.php";?>
+    	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=<?php echo $font_family;?>">
+        
         <title>Pn4c</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link href='profile_css.php' rel='stylesheet' type='text/css'>
@@ -32,7 +35,7 @@ if(isset($_FILES["fileToUpload"]["name"])){
 <body  style="margin:0px 0px; padding:0px 0px;overflow-y: auto;" >
     <?php include "../home/main-navbar.php"; ?>
     
-<div class="container-fluid" style="border:0px; font-size: 12px;">
+<div class="container-fluid" style="border:0px; font-size: 13px;font-family:<?php echo $font_family;?>;">
     
     <br /><br />
     <div id="profil-header">
@@ -45,7 +48,7 @@ if(isset($_FILES["fileToUpload"]["name"])){
 	</div>
 	
 	<div class="col-md-5 col-md-offset-0">
-	    <?php show_all_posts(); ?>
+	    <?php show_posts(); ?>
 	</div>
     
     <div class="col-md-2 col-md-offset-1" style="height:100%;" id="posts-head">

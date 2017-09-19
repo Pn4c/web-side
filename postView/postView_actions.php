@@ -28,8 +28,21 @@
 						<div class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(<?php echo $colors[$each_data['Feeling']]; ?>,0.01);"><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
 						<?php $date = strtotime($each_data['Date']) ?>
 						<div class="panel-heading" style="background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
-						<div class="panel-body" style="padding:0px 0px;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);"><div style=""><?php echo $each_data['Content']; ?></div></div>
-						<!--<div class="panel-footer" style="text-align:right; background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);"><?php echo date('Y-m-d', $date); ?></div>-->
+						<?php
+							if ($each_data['Type'] == 0){
+								echo '<div class="panel-body" style="padding:0px 0px;background-color: rgba('. $colors[$each_data["Feeling"]] .',0.5);"><div style="">'. $each_data["Content"] .'</div></div>';
+							}
+							elseif($each_data['Type'] == 1){
+								$content_array = explode(",", $each_data["Content"],2);
+								echo '
+									<div class="panel-body" style="padding:0px 0px;background-color: rgba('. $colors[$each_data["Feeling"]] .',0.5);">
+									<img id="post-image-image" style="width:100%;" src="'. $content_array[0] .'">
+									<br /><br />
+									<p id="post-image-text">'. $content_array[1] .'</p>
+									</div>
+								';
+							}
+						?>
 					</div>
 					
 				</div>

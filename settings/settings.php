@@ -4,7 +4,10 @@
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
+	
+	<?php include "../static/system_variables.php";?>
+   	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=<?php echo $font_family;?>">
+	
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link href='settings_css.php' rel='stylesheet' type='text/css'>
 	<link href='../home/post_css.php' rel='stylesheet' type='text/css'>
@@ -15,7 +18,7 @@
 	<?php include '../languages/select_lang.php';?>
 	<?php include '../languages/country_names.php';?>
 </head>
-<body style="margin:0px 0px; padding:0px 0px;overflow-y: auto;">
+<body style="margin:0px 0px; padding:0px 0px;overflow-y: auto;border:0px;font-size: 13px;font-family:<?php echo $font_family;?>;">
 	
 	<?php include "../home/main-navbar.php"; ?>
 	<br />

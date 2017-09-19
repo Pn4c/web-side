@@ -44,3 +44,6 @@ input[type="text"]{
 	border:0px;
 	background:rgba(0,0,0,0);
 }
+a{
+	text-decoration: none !important;
+}

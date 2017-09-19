@@ -5,7 +5,6 @@ error_reporting( E_ALL );
 
 <?php
 if (isset($_GET['u'])){
-	$_SESSION['searched_user'] = $_GET['u'];
 	$NickName = $_GET['u'];
 }
 ?>
@@ -15,7 +14,7 @@ if (isset($_GET['u'])){
 	<link rel="stylesheet" href="profile_other_header_css.php" style="text/css">
 </head>
 <body>
-<header>
+<header style="font-size: 13px;font-family:<?php echo $font_family;?>;">
 	<div class="hidden-xs bg-default " style="opacity: 1;">
 		<div class="row">
 			
@@ -30,11 +29,11 @@ if (isset($_GET['u'])){
 		<div class="row">
 			<div class="col-md-4 col-md-offset-8">
 				<div class="panel panel-default" style="border:0px;">
-					<div class="panel-heading pull-right" style="background:rgba(0,0,0,0);">
+					<div class="panel-heading pull-right" style="background:rgba(0,0,0,0);border:0px;">
 						<h5><?php echo num_follow($NickName);?> follows</h5>
 					</div>
 					
-					<div class="panel-heading pull-right" style="background:rgba(0,0,0,0);">
+					<div class="panel-heading pull-right" style="background:rgba(0,0,0,0);border:0px;">
 						<h5><?php echo num_follower($NickName);?> followers</h5>
 					</div>
 				</div>
@@ -117,7 +116,7 @@ if (isset($_GET['u'])){
 			$result2 = mysqli_query($db, $sql2);
 			
 			
-			header("location:profile_other.php");
+			header("location:profile_other.php?u=$searched_user");
 		}
 		
 	}
@@ -146,7 +145,7 @@ if (isset($_GET['u'])){
 			$sql1 = "UPDATE `relationships` SET `followed`='$update_value' WHERE `follower`= '$NickName'";
 			$result1 = mysqli_query($db, $sql1);
 			
-			header("location:profile_other.php");
+			header("location:profile_other.php?u=$searched_user");
 		}
 	}
 

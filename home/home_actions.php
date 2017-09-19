@@ -18,7 +18,7 @@
 	if(isset($_POST['post_button'])){
 		
 		$NickName = $_COOKIE['NickName'];
-		$Content = '<p id="post-text-text">' . mysqli_real_escape_string($db, $_POST['input_content']) . '</p>';
+		$Content = mysqli_real_escape_string($db, $_POST['input_content']) ;
 		$Title = mysqli_real_escape_string($db, $_POST['input_title']);
 		$Feeling = mysqli_real_escape_string($db, $_POST['input_feeling']);
 		$Date = date('Y-m-d H:i:s');
@@ -40,7 +40,7 @@
 		$NickName = $_COOKIE['NickName'];
 		$Title = mysqli_real_escape_string($db, $_POST['input_title']);
 		$filename = $_SESSION['Content'];
-		$Content = '<img id="post-image-image" style="width:100%;" src="'.$filename.'">' .  "<br /><br />" . '<p id="post-image-text">' . mysqli_real_escape_string($db, $_POST['input_content']) . '</p>';
+		$Content = $filename . "," . mysqli_real_escape_string($db, $_POST['input_content']) . '</p>';
 		$Feeling = mysqli_real_escape_string($db, $_POST['input_feeling']);
 		$Date = date('Y-m-d H:i:s');
 		
@@ -205,7 +205,12 @@
 	}
 
 	function show_posts(){
-		$NickName = $_COOKIE['NickName'];
+		if(explode("?", $_SERVER['REQUEST_URI'])[0] == "/profile_others/profile_other.php"){
+			$NickName = $_GET['u'];
+		}
+		else{
+			$NickName = $_COOKIE['NickName'];
+		}
 		
 		//connect database
 		include "../static/database/database_connect.php";
@@ -230,9 +235,18 @@
 			while($each_data = mysqli_fetch_assoc($result)){
 				$postID = $each_data['ID'];
 				
-				//Dead feeling color and text color are same so dead feeling title must be different
-				if (in_array($each_data['UserNickName'], $followeds) or $each_data['UserNickName'] == $NickName ){
+				//determine that which users will be displayed according to where are you(url)
+				if(explode("?", $_SERVER['REQUEST_URI'])[0] == "/home/home.php"){
+					$condition = in_array($each_data['UserNickName'], $followeds) or $each_data['UserNickName'] == $NickName;
+				}
+				else{
+					$condition = $each_data['UserNickName'] == $NickName;
+				}
+				
+				
+				if ($condition){
 					
+					//Dead feeling color and text color are same so dead feeling title must be different
 					if ($each_data['Feeling'] == "Dead"){
 						$title_color = "white";
 					}
@@ -242,17 +256,47 @@
 					
 				?>
 				<div class="panel-group" id="panel-group">
-					<div class="panel panel-default" style="">
+					<div class="panel panel-default" style="border:0px;">
 						
-						<div id="a-name" class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(<?php echo $colors[$each_data['Feeling']]; ?>,0.01);">
-							<a href="/profile_others/profile_other.php?u=<?php echo $each_data['UserNickName'];?>"><kbd><?php echo $each_data['UserNickName']; ?></kbd></a>
-						</div>
+						<?php
+							if(explode("?", $_SERVER['REQUEST_URI'])[0] == "/profile/profile.php"){
+								echo '
+									<form method="POST">
+									<button id="delete-post-button" type="submit" class="btn btn-default pull-right" name="delete-post-button" value=""><span class="glyphicon glyphicon-remove"></span></button>
+									<input type="hidden" name="postID" value="'. $each_data["ID"] .'">
+									<button id="update-post-button" type="submit" class="btn btn-default pull-right" name="update-post-button" value=""><span class="glyphicon glyphicon-pencil"></span></button>
+									</form>
+								';
+							}
+							elseif (explode("?", $_SERVER['REQUEST_URI'])[0] == "/home/home.php"){
+								echo '
+									<div id="a-name" class="panel-heading pull-right" id="header-nickname" style="background-color: rgba('.$colors[$each_data["Feeling"]].',0.01);">
+										<a href="/profile_others/profile_other.php?u='. $each_data["UserNickName"] .'"><kbd>'.$each_data["UserNickName"] .'</kbd></a>
+									</div>
+								';
+							}
+						?>
+						
 						<?php $date = strtotime($each_data['Date']) ?>
 						<a href="/postView/postView.php?post=<?php echo $postID;?>">
 						<div id="a-text" class="panel-heading" style="color:<?php echo $title_color; ?>;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
 						</a>
-						<div class="panel-body" style="padding:0px 0px;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);"><div style=""><?php echo $each_data['Content']; ?></div></div>
-						<!--<div class="panel-footer" style="text-align:right; background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);"><?php echo date('Y-m-d', $date); ?></div>-->
+						<?php
+							if ($each_data['Type'] == 0){
+								echo '<div class="panel-body" style="padding:0px 0px;background-color: rgba('. $colors[$each_data["Feeling"]] .',0.5);"><p style="padding-top:3%;"id="post-image-text">'. $each_data['Content'] .'</p></div>';
+							}
+							elseif($each_data['Type'] == 1){
+								$content_array = explode(",", $each_data["Content"],2);
+								echo '
+									<div class="panel-body" style="padding:0px 0px;background-color: rgba('. $colors[$each_data["Feeling"]] .',0.5);">
+									<img id="post-image-image" style="width:100%;" src="'. $content_array[0] .'">
+									<br /><br />
+									<p id="post-image-text">'. $content_array[1] .'</p>
+									</div>
+								';
+							}
+						?>
+						
 					</div>
 					
 					<div class="form-inline" style="">
@@ -268,6 +312,9 @@
 				}
 			}
 		}
+		else{
+			echo "No Post";
+		}
 
 	}
 	
@@ -280,10 +327,10 @@
 			$NickName = $_COOKIE['NickName'];
 		}
 		elseif (str_replace("?", "", $_SERVER['REQUEST_URI']) == "/profile_others/profile_other.php"){
-			$NickName = $_SESSION['searched_user'];
+			$NickName = $_GET['u'];
 		}
 		elseif (str_replace("?", "", $_SERVER['REQUEST_URI']) == "/profile/profile.php"){
-			$NickName = $_SESSION['searched_user'];
+			$NickName = $_COOKIE['NickName'];
 		}
 		elseif (isset($_GET['u'])){
 			$NickName = $_GET['u'];
@@ -319,9 +366,7 @@
 		echo "</div>";
 		}
 		else{
-			if (explode("?", $_SERVER['REQUEST_URI'])[0] != "/profile_others/profile_other.php"){
-				echo "No Note";
-			}
+			echo "No Note";
 		}
 		
 	}

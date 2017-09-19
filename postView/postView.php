@@ -4,7 +4,10 @@
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
+	
+	<?php include "../static/system_variables.php";?>
+   	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=<?php echo $font_family;?>">
+	
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link href='postView_css.php' rel='stylesheet' type='text/css'>
 	<link href='../home/post_css.php' rel='stylesheet' type='text/css'>
@@ -13,13 +16,13 @@
 	<?php include 'postView_actions.php';?>
 	<?php include '../languages/select_lang.php';?>
 </head>
-<body style="margin:0px 0px; padding:0px 0px;overflow-y: auto;">
+<body style="margin:0px 0px; padding:0px 0px;overflow-y: auto;border:0px;font-size: 13px;font-family:<?php echo $font_family;?>;">
 
 	<?php include "../home/main-navbar.php"; ?>
 	<br />
 	<br />
 	<br />
-	<div class="container-fluid" style="border:0px; font-size: 12px;">
+	<div class="container-fluid" style="border:0px; font-size: 14px;">
 
 		<div class="col-md-2" id="posts-head">
 			
