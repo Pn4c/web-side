@@ -1,0 +1,185 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href='home_css.php' rel='stylesheet' type='text/css'>
+<title>Pn4c</title>
+<?php session_start(); ?>
+<?php include 'home_actions.php';?>
+<?php include '../languages/select_lang.php';?>
+
+<body>
+	<div class="container-fluid" style="background-color: rgba(255,255,255,0.01);">
+			<div class="col-sm-4" style="opacity:0.9;"><?php include '../static/sidenavbar.php';?></div>
+
+			<div class="col-sm-6" >
+				
+				<form method="POST" action="home.php" id="form-post">
+
+					<br />
+					
+				<div class="form-group">
+   				  <label for="input_title"><?php echo $lang['Post Something']; ?></label>
+				  <textarea class="form-control" id="fadeout" name="input_content" rows="5" id="input_content" placeholder="<?php echo $lang['Content']; ?>"></textarea>
+				</div>
+					
+				<div class="form-group">	
+					  <input type="text" class="form-control" id="input_title" placeholder="<?php echo $lang['Title']; ?>" name="input_title">
+					  <select name="input_feeling" class="form-control" id="inlineFormCustomSelect">
+						<option selected><?php echo $lang['Successful']; ?></option>
+						<option value="Happy"><?php echo $lang['Happy']; ?></option>
+						<option value="Sad"><?php echo $lang['Sad']; ?></option>
+						<option value="Excited"><?php echo $lang['Excited']; ?></option>
+						<option value="Dead"><?php echo $lang['Dead']; ?></option>
+						<option value="Disappointed"><?php echo $lang['Disappointed']; ?></option>
+						<option value="Lonely"><?php echo $lang['Lonely']; ?></option>
+					 </select>
+				  	  <input type="submit" class="btn btn-default" name="post_button" id="post_button" value="<?php echo $lang['Create Post']; ?>" style="float: right;">
+						<br /><br />
+				</div>
+				
+				<form action="home_actions.php" method="post" enctype="multipart/form-data">
+					<input type="file" class="btn btn-default pu" name="image" />
+					<input type="submit" class="btn btn-default" name="submit" value="Upload" />
+				</form>
+
+                		
+				<div class="row" style="margin:0px 0px 2% 0%;">
+					<input type="submit" class="btn btn-default pull-left" style="border:0px;" name="feeling_filter_button_0" value="<?php echo $lang['All']; ?>">
+					<input type="submit" class="btn btn-default pull-left" style="background-color: rgba(129,80,187,0.9); border:0px;" name="feeling_filter_button_1" value="<?php echo $lang['Successful']; ?>">
+					<input type="submit" class="btn btn-default pull-left" style="background-color: rgba(250,255,82,0.9); border:0px;" name="feeling_filter_button_2" value="<?php echo $lang['Happy']; ?>">
+					<input type="submit" class="btn btn-default pull-left" style="background-color: rgba(101,105,144,0.9); border:0px;" name="feeling_filter_button_3" value="<?php echo $lang['Sad']; ?>">
+					<input type="submit" class="btn btn-default pull-left" style="background-color: rgba(255,176,54,0.9); border:0px;" name="feeling_filter_button_4" value="<?php echo $lang['Excited']; ?>" >
+					<input type="submit" class="btn btn-default pull-left" style="background-color: rgba(71,71,65,0.9); border:0px;" name="feeling_filter_button_5" value="<?php echo $lang['Dead']; ?>">
+					<input type="submit" class="btn btn-default pull-left" style="background-color: rgba(205,202,199,0.9); border:0px;" name="feeling_filter_button_6" value="<?php echo $lang['Disappointed']; ?>">
+					<input type="submit" class="btn btn-default pull-left" style="background-color: rgba(205,202,199,0.9); border:0px;" name="feeling_filter_button_7" value="<?php echo $lang['Lonely']; ?>" >
+				</div>
+
+				</form>
+
+				<?php 
+
+					$NickName = $_SESSION['NickName'];
+
+					//connect database
+					$db = mysqli_connect("localhost", "root", "barbi4536,K", "users");
+					$filter_condition = $_SESSION['filter_condition'];
+					$sql = "SELECT * FROM posts " . $filter_condition . " ORDER BY id DESC ";
+					$result = mysqli_query($db, $sql);
+					
+					$sql2 = "SELECT * FROM relationships WHERE `follower` = '$NickName'";
+					$result2 = mysqli_query($db, $sql2);
+					
+					$followeds = array();
+				
+					while($each_followed = mysqli_fetch_assoc($result2)){
+						$followeds= explode(',', $each_followed['followed']);
+					}
+
+
+					if(mysqli_num_rows($result) >= 1){
+					
+						while($each_data = mysqli_fetch_assoc($result)){
+								if (in_array($each_data['UserNickName'], $followeds) or $each_data['UserNickName'] == $NickName ){
+								?>
+								<?php if ($each_data['Feeling']=='Successful'){ ?>
+								 <div class="panel-group" id="panel-group">
+									<div class="panel panel-default" style="border:0px;">
+										<div class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(129,80,187,0.01);"><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
+										<?php $date = strtotime($each_data['Date']) ?>
+										<div class="panel-heading" style="background-color: rgba(129,80,187,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+										<div class="panel-body" style="background-color: rgba(129,80,187,0.9);"><?php echo $each_data['Content']; ?></div>
+										<div class="panel-footer" style="text-align:right; background-color: rgba(129,80,187,0.5);"><?php echo date('Y-m-d', $date); ?></div>
+									 </div>
+								 </div>
+								<?php }elseif ($each_data['Feeling']=='Happy'){?>
+								<div class="panel-group" id="panel-group">
+									<div class="panel panel-default" style="border:0px;">
+										<div class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(250,255,82,0.01);"><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
+										<?php $date = strtotime($each_data['Date']) ?>
+										<div class="panel-heading" style="background-color: rgba(250,255,82,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+										<div class="panel-body" style="background-color: rgba(250,255,82,0.9);"><?php echo $each_data['Content']; ?></div>
+										<div class="panel-footer" style="text-align:right; background-color: rgba(250,255,82,0.5);"><?php echo date('Y-m-d', $date); ?></div>
+									 </div>
+								 </div>
+								<?php }elseif ($each_data['Feeling']=='Dead'){?>
+								<div class="panel-group" id="panel-group">
+									<div class="panel panel-default" style="border:0px;">
+										<div class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(71,71,65,0.01);"><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
+										<?php $date = strtotime($each_data['Date']) ?>
+										<div class="panel-heading" style="background-color: rgba(71,71,65,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+										<div class="panel-body" style="background-color: rgba(71,71,65,0.9);"><?php echo $each_data['Content']; ?></div>
+										<div class="panel-footer" style="text-align:right; background-color: rgba(71,71,65,0.5);"><?php echo date('Y-m-d', $date); ?></div>
+									 </div>
+								 </div>
+								<?php }elseif ($each_data['Feeling']=='Excited'){?>
+								<div class="panel-group" id="panel-group">
+									<div class="panel panel-default" style="border:0px;">
+										<div class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(255,176,54,0.01);"><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
+										<?php $date = strtotime($each_data['Date']) ?>
+										<div class="panel-heading" style="background-color: rgba(255,176,54,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+										<div class="panel-body" style="background-color: rgba(255,176,54,0.9);"><?php echo $each_data['Content']; ?></div>
+										<div class="panel-footer" style="text-align:right; background-color: rgba(255,176,54,0.5);"><?php echo date('Y-m-d', $date); ?></div>
+									 </div>
+								 </div>
+								<?php }elseif ($each_data['Feeling']=='Sad'){?>
+								<div class="panel-group" id="panel-group">
+									<div class="panel panel-default" style="border:0px;">
+										<div class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(101,105,144,0.01);"><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
+										<?php $date = strtotime($each_data['Date']) ?>
+										<div class="panel-heading" style="background-color: rgba(101,105,144,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+										<div class="panel-body" style="background-color: rgba(101,105,144,0.9);"><?php echo $each_data['Content']; ?></div>
+										<div class="panel-footer" style="text-align:right; background-color: rgba(101,105,144,0.5);"><?php echo date('Y-m-d', $date); ?></div>
+									 </div>
+								 </div>
+								<?php }elseif ($each_data['Feeling']=='Lonely'){?>
+								<div class="panel-group" id="panel-group">
+									<div class="panel panel-default" style="border:0px;">
+										<div class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(205,201,199,0.01);"><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
+										<?php $date = strtotime($each_data['Date']) ?>
+										<div class="panel-heading" style="background-color: rgba(205,201,199,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+										<div class="panel-body" style="background-color: rgba(205,201,199,0.9);"><?php echo $each_data['Content']; ?></div>
+										<div class="panel-footer" style="text-align:right; background-color: rgba(205,201,199,0.5);"><?php echo date('Y-m-d', $date); ?></div>
+									 </div>
+								 </div>
+								<?php }else{?>
+								<div class="panel-group" id="panel-group">
+									<div class="panel panel-default" style="border:0px;">
+										<div class="panel-heading pull-right" id="header-nickname" ><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
+										<?php $date = strtotime($each_data['Date']) ?>
+										<div class="panel-heading" ><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+										<div class="panel-body" ><?php echo $each_data['Content']; ?></div>
+										<div class="panel-footer" style="text-align:right; "><?php echo date('Y-m-d', $date); ?></div>
+									 </div>
+								 </div>
+								<?php } ?>
+
+
+
+							<?php
+							}
+
+						}
+						
+					}
+					else{
+						echo 'No post yet';
+					}
+				?>
+			</div>
+			
+			<div class="col-md-1">
+				<form method='POST'>
+					<div class="row" id="right-buttons1">
+					<button type="submit" name="button_add_note" class="btn btn-default pull-right" id="btnactive" style="border-radius:30px; margin:20% 0px 0px 0px; padding:10%; background:rgba(231, 77, 67, 0.9);"><span class="glyphicon glyphicon-bell"></span></button>
+					</div>
+					<div class="row" id="right-buttons2">
+					<button type="submit" name="button_add_note" class="btn btn-default pull-right" id="btnactive" style="border-radius:30px; margin:0px 0px 0px 0px; padding:10%; background:rgba(62, 146, 231, 0.9);"><span class="glyphicon glyphicon-plus"></span></button>
+					</div>
+				</form>
+			</div>
+			
+		
+	</div>
+</body>
