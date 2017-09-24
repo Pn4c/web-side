@@ -11,22 +11,24 @@
 	<?php $font_family = "Happy Monkey";?>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link href='index_css.php' rel='stylesheet' type='text/css'>
-	<title>404 Not Found!</title>
+	<title>404 Error - Page Not Found</title>
 	
 </head>
 <body > 
 <?php $_SESSION['filter_condition'] =""; ?>
 <div class="jumbotron vertical-center" >
 <div class="container-fluid" style="background-color:rgba(255,255,255,0);">
+	
 	<br />
 	<div class="row" style="font-family:<?php echo $font_family;?>;">
 
 		<div class="col-md-4 col-md-offset-4 jumbotron vertical-center" style="background:rgba(255,255,255,0.5);border-radius:10px;">
+			<p>404 Not Found !</p>
 			<p>Are you sure if you are looking for there?</p>
 		</div>
 
 	</div>
-	
+
 </div>
 </div>
 </body>

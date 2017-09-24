@@ -22,7 +22,7 @@
 		$Title = mysqli_real_escape_string($db, $_POST['input_title']);
 		$Feeling = mysqli_real_escape_string($db, $_POST['input_feeling']);
 		$Date = date('Y-m-d H:i:s');
-		if ($Content != '' and $NickName!=''){
+		if ($Content != '' and $Title != "" and $NickName!=''){
 			
 			$sql = "INSERT INTO `posts`( `UserNickName`, `Title`, `Content`, `Date`, `Feeling`) VALUES ('$NickName', '$Title', '$Content', '$Date', '$Feeling')";
 			
@@ -40,7 +40,7 @@
 		$NickName = $_COOKIE['NickName'];
 		$Title = mysqli_real_escape_string($db, $_POST['input_title']);
 		$filename = $_SESSION['Content'];
-		$Content = $filename . "," . mysqli_real_escape_string($db, $_POST['input_content']) . '</p>';
+		$Content = $filename . "," . mysqli_real_escape_string($db, $_POST['input_content']);
 		$Feeling = mysqli_real_escape_string($db, $_POST['input_feeling']);
 		$Date = date('Y-m-d H:i:s');
 		
@@ -98,6 +98,10 @@
 		
 	}
 	
+	if(isset($_POST['change-note_button'])){
+		
+	}
+
 	if(isset($_POST['feeling_filter_button_0'])){
 		$_SESSION['filter_condition']="";
 		header("location:home.php");
@@ -205,6 +209,9 @@
 	}
 
 	function show_posts(){
+		include '../languages/select_lang.php';
+		include '../static/system_variables.php';
+
 		if(explode("?", $_SERVER['REQUEST_URI'])[0] == "/profile_others/profile_other.php"){
 			$NickName = $_GET['u'];
 		}
@@ -220,9 +227,6 @@
 
 		$sql2 = "SELECT * FROM relationships WHERE `follower` = '$NickName'";
 		$result2 = mysqli_query($db, $sql2);
-		
-		$colors = array("Successful" => "129,80,187", "Lonely" => "205,201,199", "Dead" => "71,71,65", "Excited" => "255,176,54", "Sad" => "101,105,144", "Happy" => "250,255,82");
-		
 		
 		$followeds = array();
 
@@ -279,11 +283,11 @@
 						
 						<?php $date = strtotime($each_data['Date']) ?>
 						<a href="/postView/postView.php?post=<?php echo $postID;?>">
-						<div id="a-text" class="panel-heading" style="color:<?php echo $title_color; ?>;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+						<div id="a-text" class="panel-heading" style="color:<?php echo $title_color; ?>;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.9);"><?php echo $each_data['Title'];?></div>
 						</a>
 						<?php
 							if ($each_data['Type'] == 0){
-								echo '<div class="panel-body" style="padding:0px 0px;background-color: rgba('. $colors[$each_data["Feeling"]] .',0.5);"><p style="padding-top:3%;"id="post-image-text">'. $each_data['Content'] .'</p></div>';
+								echo '<div class="panel-body" style="padding:0px 0px;background-color: rgba('. $colors[$each_data["Feeling"]] .',0.5);"><p style="padding-top:3%;"id="post-text-text">'. $each_data['Content'] .'</p></div>';
 							}
 							elseif($each_data['Type'] == 1){
 								$content_array = explode(",", $each_data["Content"],2);
@@ -296,13 +300,14 @@
 								';
 							}
 						?>
+						<div class="panel-heading" style="text-align:right;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);"><?php echo date('H:i | d-m-Y', $date); ?></div>
 						
 					</div>
 					
 					<div class="form-inline" style="">
 						<form method="POST">
 							<button name="comment-button" id="comment-button" type="submit" class="btn btn-default" style="" ><span class="glyphicon glyphicon-send"></span></button>
-							<input name="input_content" id="comment-input" type="text" class="form-control pull-right" style="width:90%;text-align:right;" placeholder="comment" />
+							<input name="input_content" id="comment-input" type="text" class="form-control pull-right" style="width:90%;text-align:right;" placeholder="<?php echo $lang['comment']?>" />
 							<input type='hidden' value='<?php echo $postID; ?>' name='postID'>
 						</form>
 					</div>
@@ -313,7 +318,7 @@
 			}
 		}
 		else{
-			echo "No Post";
+			echo $lang['No Post'];
 		}
 
 	}
@@ -337,6 +342,7 @@
 		}
 		
 		include '../static/database/database_connect.php';
+		include '../languages/select_lang.php';
 		$sql= "SELECT * FROM notes WHERE `UserNickName` = '$NickName' ORDER BY id DESC LIMIT 0,5" ;
 		
 		$result = mysqli_query($db, $sql);
@@ -366,12 +372,14 @@
 		echo "</div>";
 		}
 		else{
-			echo "No Note";
+			echo $lang['No Note'];
 		}
 		
 	}
 
 	function show_all_notifications(){
+		include '../languages/select_lang.php';
+		
 		$NickName = $_COOKIE['NickName'];
 		include '../static/database/database_connect.php';
 		$sql= "SELECT * FROM notifications WHERE `NickName` = '$NickName' ORDER BY id DESC" ;
@@ -418,7 +426,7 @@
 		echo "</div>";
 		}
 		else{
-			echo "No Notification";
+			echo $lang['No Notification'];
 		}
 		
 		

@@ -3,7 +3,8 @@ $lang['Email'] = "E-mail";
 $lang['Password'] = "Password";
 $lang['Login'] = "Login";
 $lang['Register'] = "Register";
-
+$lang["Don't have an account ?"] = "Don't have an account ?";
+	
 $lang['Home'] = "Home";
 $lang['Profile'] = "Profile";
 $lang['Logout'] = "Logout";
@@ -22,6 +23,7 @@ $lang['Excited'] = "Excited";
 $lang['Dead'] = "Dead";
 $lang['Disappointed'] = "Disappointed";
 $lang['Lonely'] = "Lonely";
+$lang['Bored'] = "Bored";
 
 $lang['Language'] = "Language";
 $lang['Other'] = "Other";
@@ -44,5 +46,13 @@ $lang['Relax'] = 'Relax !';
 $lang['Forgot Password'] = 'Forgot Password?';
 
 $lang['Show My Profile'] = 'Show My Profile';
+
+$lang['comment'] = "comment";
+$lang['follows'] = "follows";
+$lang['followers'] = "followers";
+
+$lang['No Post'] = "No Post";
+$lang['No Note'] = "No Note";
+$lang['No Notification'] = "No Notification";
 
 ?>

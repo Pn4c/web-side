@@ -35,7 +35,7 @@
 			<br />
 			<br />
 			<br />
-			<p style="width:100%;" >Don't have an account ?</p>
+			<p style="width:100%;" ><?php echo $lang["Don't have an account ?"]; ?></p>
 			<br />
 			<br />
 			<br />

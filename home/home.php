@@ -27,8 +27,6 @@
 </head>
 <body onload="defa()" style="margin:0px 0px; padding:0px 0px;overflow-y: auto;">
 	
-	
-	
 	<?php include "main-navbar.php"; ?>
 	<br />
 	<br />
@@ -42,6 +40,9 @@
 		<div class="col-md-5 col-xs-5" id="posts">
 			<br />
 
+			<?php include "../suggestion/suggest.php"; ?>
+			<?php suggestTo("d0lph1n"); ?>
+			<br />
 			<?php show_posts(); ?>
 		</div>
 

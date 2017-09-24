@@ -1,6 +1,8 @@
 <?php 
 
 	function show_post(){
+		include '../languages/select_lang.php';
+		
 		$NickName = $_COOKIE['NickName'];
 		$postID = $_GET['post'];
 		
@@ -22,15 +24,24 @@
 			while($each_data = mysqli_fetch_assoc($result)){
 				$postID = $each_data['ID'];
 				
+				
 				?>
 				<div class="panel-group" id="panel-group">
 					<div class="panel panel-default">
-						<div class="panel-heading pull-right" id="header-nickname" style="background-color: rgba(<?php echo $colors[$each_data['Feeling']]; ?>,0.01);"><kbd><?php echo $each_data['UserNickName']; ?></kbd></div>
+						
+						<?php
+						echo '
+									<div id="a-name" class="panel-heading pull-right" id="header-nickname" style="background-color: rgba('.$colors[$each_data["Feeling"]].',0.01);">
+										<a href="/profile_others/profile_other.php?u='. $each_data["UserNickName"] .'"><kbd>'.$each_data["UserNickName"] .'</kbd></a>
+									</div>
+								';
+						?>
+						
 						<?php $date = strtotime($each_data['Date']) ?>
-						<div class="panel-heading" style="background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.9);"><?php echo $each_data['Title']  . " - " . date('H:i', $date); ?></div>
+						<div class="panel-heading" style="background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.9);"><?php echo $each_data['Title']; ?></div>
 						<?php
 							if ($each_data['Type'] == 0){
-								echo '<div class="panel-body" style="padding:0px 0px;background-color: rgba('. $colors[$each_data["Feeling"]] .',0.5);"><div style="">'. $each_data["Content"] .'</div></div>';
+								echo '<div class="panel-body" style="padding:0px 0px;background-color: rgba('. $colors[$each_data["Feeling"]] .',0.5);"><div id="post-image-text" style="padding-top:3%;">'. $each_data["Content"] .'</div></div>';
 							}
 							elseif($each_data['Type'] == 1){
 								$content_array = explode(",", $each_data["Content"],2);
@@ -43,6 +54,8 @@
 								';
 							}
 						?>
+						<div class="panel-heading" style="text-align:right;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);"><?php echo date('H:i | d-m-Y', $date); ?></div>
+						
 					</div>
 					
 				</div>
@@ -55,6 +68,8 @@
 	}
 
 	function show_comments(){
+		include '../languages/select_lang.php';
+		
 		$NickName = $_COOKIE['NickName'];
 		$postID = $_GET['post'];
 		
@@ -104,7 +119,7 @@
 				<div class="form-inline" style="">
 					<form method="POST">
 						<button name="comment-button" id="comment-button" type="submit" class="btn btn-default" style="" ><span class="glyphicon glyphicon-send"></span></button>
-						<input name="input_content" id="comment-input" type="text" class="form-control pull-right" style="width:90%;text-align:right;" placeholder="comment" />
+						<input name="input_content" id="comment-input" type="text" class="form-control pull-right" style="width:90%;text-align:right;" placeholder="<?php echo $lang['comment']?>" />
 						<input type='hidden' value='<?php echo $postID; ?>' name='postID'>
 					</form>
 				</div>

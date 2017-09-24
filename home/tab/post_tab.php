@@ -43,7 +43,7 @@
 <div class="tab">
   <button class="tablinks" onclick="openCityS(event, 'Post-Text')" id="tab-image-text"><span class="glyphicon glyphicon-font"></span></button>
   <button class="tablinks" onclick="openCityS(event, 'Post-Image')" id="tab-image-post"><span class="glyphicon glyphicon-picture"></span></button>
-  <button class="tablinks pull-right" onclick="openCityS(event, 'Add-Note')" id="tab-add-note"><span class="glyphicon glyphicon-plus"></span></button>
+  <button class="tablinks pull-right" onclick="openCityS(event, 'Add-Note')" id="tab-add-note"><span class="glyphicon glyphicon-check"></span></button>
 </div>
 	
 	
@@ -65,6 +65,7 @@
 					<option value="Dead"><?php echo $lang['Dead']; ?></option>
 					<option value="Disappointed"><?php echo $lang['Disappointed']; ?></option>
 					<option value="Lonely"><?php echo $lang['Lonely']; ?></option>
+					<option value="Bored"><?php echo $lang['Bored']; ?></option>
 				 </select>
 				  <input type="submit" class="btn btn-default" name="post_button" id="post_button" value="<?php echo $lang['Create Post']; ?>" style="float: right;">
 					<br /><br />
@@ -122,6 +123,7 @@
 					<option value="Dead"><?php echo $lang['Dead']; ?></option>
 					<option value="Disappointed"><?php echo $lang['Disappointed']; ?></option>
 					<option value="Lonely"><?php echo $lang['Lonely']; ?></option>
+					<option value="Bored"><?php echo $lang['Bored']; ?></option>
 				 </select>
 				  <input type="submit" class="btn btn-default" name="post_button_image" id="post_button" value="<?php echo $lang['Create Post']; ?>" style="float: right;">
 					<br /><br />

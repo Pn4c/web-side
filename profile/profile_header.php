@@ -28,11 +28,11 @@
 			<div class="col-md-4 col-md-offset-8">
 				<div class="panel panel-default" style="border:0px;">
 					<div class="panel-heading pull-right" style="border:0px;background:rgba(0,0,0,0);">
-						<h5><?php echo num_follow($_COOKIE['NickName']);?> follows</h5>
+						<h5><?php echo num_follow($_COOKIE['NickName']) . " " . $lang['follows'];?> </h5>
 					</div>
 					
 					<div class="panel-heading pull-right" style="border:0px;background:rgba(0,0,0,0);">
-						<h5><?php echo num_follower($_COOKIE['NickName']);?> followers</h5>
+						<h5><?php echo num_follower($_COOKIE['NickName']) . " " . $lang['followers'];?></h5>
 					</div>
 				</div>
 			</div>

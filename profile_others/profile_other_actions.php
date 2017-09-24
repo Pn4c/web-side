@@ -16,11 +16,13 @@
 		else{
 			$profile_other_header = " ";
 			include "../404/404.php";
+			die();
 		}
 	}
 	else{
 		$profile_other_header = " ";
 		include "../404/404.php";
+		die();
 	}
 
 	//connect database
@@ -31,7 +33,9 @@
 			$NickName = $_GET['u'];
 		}
 		else{
+			http_response_code(404);
 			include "../404/404.php";
+			die();
 			return 0;
 		}
 		
