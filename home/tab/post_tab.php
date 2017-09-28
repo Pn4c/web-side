@@ -140,11 +140,27 @@
 			  <textarea class="form-control" id="fadeout" name="input_content" rows="5" id="input_content" placeholder="<?php echo $lang['Content']; ?>"></textarea>
 			</div>
 
+			<div class="form-check">
+			  <label class="form-check-label">
+				<input class="form-check-input" name="noteDateCheck" type="checkbox" value="">
+				Set Ending Time
+			  </label>
+			</div>
+			
+
+			<div class="form-group">
+				<label for="example-datetime-local-input" class="col-2 col-form-label">Date and time</label>
+				<div class="col-10">
+				<input class="form-control" type="datetime-local" value="" name="noteDateTime" id="datetime-local-input">
+				</div>
+			</div>
+
+			
 			<div class="form-group">	
 				  <input type="submit" class="btn btn-default" name="add_note_button" id="post_button" value="<?php echo $lang['Add Note']; ?>" style="float: right;">
 					<br /><br />
 			</div>
-
+			
 		</form>
 </div>
 

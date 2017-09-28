@@ -44,7 +44,10 @@
 		$Feeling = mysqli_real_escape_string($db, $_POST['input_feeling']);
 		$Date = date('Y-m-d H:i:s');
 		
-		if ($Content != '' and $NickName!=''){
+		
+		
+		if(isset($_FILES["fileToUpload"])){
+			if ($Content != '' and $NickName!=''){
 			
 			$sql = "INSERT INTO `posts`( `UserNickName`, `Title`, `Content`, `Date`, `Feeling`, `Type`) VALUES ('$NickName', '$Title', '$Content', '$Date', '$Feeling', '1')";
 			$result = mysqli_query($db, $sql);
@@ -68,34 +71,42 @@
 			//---
 			
 			load_image();
+			
+			}
+			else{
+				echo " <script type='text/javascript'>  alert('Content or title can not be empty!'); </script> "; 
+			}
 		}
 		else{
-			echo " <script type='text/javascript'>  alert('Content or title can not be empty!'); </script> "; 
+			echo " <script type='text/javascript'>  alert('Select an image!'); </script> "; 
 		}
-		
 		
 		if($result){
-			unset($_FILES['fileToUpload']['name']);
-		}
+				unset($_FILES['fileToUpload']['name']);
+			}
+		
 		
 	}
 
 	if(isset($_POST['add_note_button'])){
 		
 		$NickName = $_COOKIE['NickName'];
-		
 		$NoteContent = mysqli_real_escape_string($db, $_POST['input_content']);
 		$NoteDate = date('Y-m-d H:i:s');
-		if ($NoteContent != '' and $NickName!=''){
-			
-			$sql = "INSERT INTO `notes` (`UserNickName`, `Content`, `Date`) VALUES ('$NickName', '$NoteContent' , '$NoteDate')";
 		
+		if ($NoteContent != '' and $NickName!=''){
+			if(isset($_POST['noteDateCheck'])){
+				$EndingDate = $_POST['noteDateTime'];
+				$sql = "INSERT INTO `notes` (`UserNickName`, `Content`, `Date`, `EndingDate`) VALUES ('$NickName', '$NoteContent' , '$NoteDate', '$EndingDate')";
+			}
+			else{
+				$sql = "INSERT INTO `notes` (`UserNickName`, `Content`, `Date`) VALUES ('$NickName', '$NoteContent' , '$NoteDate')";
+			}
+			$result = mysqli_query($db, $sql);
 		}
 		else{
 			echo " <script type='text/javascript'>  alert('Content or title can not be empty!'); </script> "; 
 		}
-		$result = mysqli_query($db, $sql);
-		
 	}
 	
 	if(isset($_POST['change-note_button'])){
@@ -132,18 +143,6 @@
 	}
 	elseif(isset($_POST['feeling_filter_button_7'])){
 		$_SESSION['filter_condition']="WHERE `feeling`='Lonely'";
-		header("location:home.php");
-	}
-
-	if (isset($_POST['add_note'])){
-
-		$NickName = $_COOKIE['NickName'];
-		$NoteContent = $_POST['note_content'];
-		$NoteDate = date('Y-m-d');
-
-		$sql = "INSERT INTO `notes` (`UserNickName`, `Content`, `Date`) VALUES ('$NickName', '$NoteContent' , '$NoteDate')";
-		$result = mysqli_query($db, $sql);
-		
 		header("location:home.php");
 	}
 
@@ -234,9 +233,33 @@
 			$followeds= explode(',', $each_followed['followed']);
 		}
 		
+		include "../suggestion/suggest.php";
+		
+		if(count($followeds) == 1){
+			$counter_suggestion = 0;
+			$most_feeling = find_most_feeling($NickName);
+			
+			//related with suggestion view codes ---
+					if(explode("?", $_SERVER['REQUEST_URI'])[0] == "/home/home.php"){
+						
+						if (($counter_suggestion == 0 or $counter_suggestion%4 == 0) and num_suggestion($NickName) != 0 and $most_feeling != "Null"){
+						echo "<br />";
+						echo '<p>Bu kullanıcılarda senin gibi hissediyor:</p>';
+						suggestTo($NickName);
+					}
+					$counter_suggestion += 1;
+					}
+					
+			//---
+		}
+		
 		if(mysqli_num_rows($result) >= 1){
-
+			
+			
+			$counter_suggestion = 0;
 			while($each_data = mysqli_fetch_assoc($result)){
+				
+			//related with post view codes
 				$postID = $each_data['ID'];
 				
 				//determine that which users will be displayed according to where are you(url)
@@ -249,6 +272,19 @@
 				
 				
 				if ($condition){
+				
+			//related with suggestion view codes ---
+					if(explode("?", $_SERVER['REQUEST_URI'])[0] == "/home/home.php"){
+						
+						if (($counter_suggestion == 0 or $counter_suggestion%4 == 0) and num_suggestion($NickName) != 0){
+						echo "<br />";
+						echo '<p>Bu kullanıcılarda senin gibi hissediyor:</p>';
+						suggestTo($NickName);
+					}
+					$counter_suggestion += 1;
+					}
+					
+			//---
 					
 					//Dead feeling color and text color are same so dead feeling title must be different
 					if ($each_data['Feeling'] == "Dead"){
@@ -300,7 +336,11 @@
 								';
 							}
 						?>
-						<div class="panel-heading" style="text-align:right;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);"><?php echo date('H:i | d-m-Y', $date); ?></div>
+					
+						<div class="panel-heading" style="background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);">
+							<p style="text-align:left;float:left;"><?php echo num_comment($postID); ?> <?php echo $lang['comment']?></p>
+							<p style="text-align:right;"><?php echo date('H:i | d-m-Y', $date); ?></p>
+						</div>
 						
 					</div>
 					
@@ -321,6 +361,24 @@
 			echo $lang['No Post'];
 		}
 
+	}
+
+	function num_comment($postID){
+		include '../static/database/database_connect.php';
+		
+		$sql = "SELECT * FROM comments WHERE `PostID` = '$postID'; ";
+		$result = mysqli_query($db, $sql);
+		
+		$num_comment = 0;
+		if(mysqli_num_rows($result) > 0){
+			while($each_data = mysqli_fetch_assoc($result)){
+				$num_comment += 1;
+			}
+			return $num_comment;
+		}
+		else{
+			return 0;
+		}
 	}
 	
 	function goName(){
@@ -352,21 +410,74 @@
 		
 		while($each_not = mysqli_fetch_assoc($result)){
 			$date = strtotime($each_not['Date']);
-				$noteID = $each_not['ID'];
-				echo "
+			$noteID = $each_not['ID'];
+			$secs = time() - $date;
+			$endingDate = $each_not['EndingDate'];
+			
+			if($endingDate != NULL){
+				$echoNoteDateTime = "<div class='panel-footer' id='note-footer' style='text-align:right;padding:0px 3%;background:rgba(255,255,255,1);border-radius:0px; '> <p style='padding:0px 0px;' id='noteTime".$each_not['ID']."'></p></div>";
+			}else{
+				$echoNoteDateTime = "<div class='panel-footer' id='note-footer' style='text-align:right;padding:0px 3%;background:rgba(255,255,255,1);border-radius:0px; '></div>";
+			}
+			
+			echo "
 				
-							<div class='panel panel-default pull-left' id='each-note' style='width:100%;border-radius:30px 10px;'>
-							<form method='POST'>
-								<button id='delete-note-button' type='submit' name='delete_note' class='btn btn-default btn-sm pull-right' style='border:0px;border-radius:0px;'><i class='glyphicon glyphicon-remove'></i></button>
-								<button id='update-post-button' type='submit' class='btn btn-default btn-sm pull-right' name='update_note'><span class='glyphicon glyphicon-pencil'></span></button>
-								
-								<input type='hidden' value='". $noteID ."' name='noteID'>
-								<div contenteditable='true' class='panel-body' style=''  id='note-body'> " . $each_not['Content']  . " </div>
-								<!--<div class='panel-footer' id='note-footer' style='text-align:right; '>" . date('Y-m-d', $date) . " </div>-->
-								</form>
-							</div>
+					<div class='panel panel-default pull-left' id='each-note' style='width:100%;border-radius:30px 10px;'>
+					<form method='POST'>
+						<button id='delete-note-button' type='submit' name='delete_note' class='btn btn-default btn-sm pull-right' style='border:0px;border-radius:0px;'><i class='glyphicon glyphicon-remove'></i></button>
+						<button id='update-post-button' type='submit' class='btn btn-default btn-sm pull-right' name='update_note'><span class='glyphicon glyphicon-pencil'></span></button>
+
+						<input type='hidden' value='". $noteID ."' name='noteID'>
+						<div contenteditable='true' class='panel-body' style=''  id='note-body'> " . $each_not['Content']  . " </div>
+						<!--<div class='panel-footer' id='note-footer' style='text-align:right; '>" . date('Y-m-d', $date) . " </div>-->
+						".$echoNoteDateTime."
+						<script>
+						// Set the date we're counting down to
+						var countDownDate".$noteID." = new Date('".$each_not['EndingDate']."').getTime();
+
+						// Update the count down every 1 second
+						var x = setInterval(function() {
+
+						  // Get todays date and time
+						  var now = new Date().getTime();
+
+						  // Find the distance between now an the count down date
+						  var distance =countDownDate".$noteID." - now;
+
+						  // Time calculations for days, hours, minutes and seconds
+						  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+						  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+						  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+						  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 						
-				";
+						  // Display the result in the element with id='delete-note-button'
+						  if(days>0){
+							document.getElementById('noteTime".$noteID."').innerHTML = days + 'day ' + hours + ':'
+							+ minutes + ':' + seconds + '';
+						  }
+						  else if(hours>0){
+							document.getElementById('noteTime".$noteID."').innerHTML = hours + 'hour '
+							+ minutes + ':' + seconds + '';
+						  }
+						  else if(minutes>0){
+							document.getElementById('noteTime".$noteID."').innerHTML = minutes + 'minute ' + seconds + '';
+						  }
+						  else {
+							document.getElementById('noteTime".$noteID."').innerHTML = seconds + 'second';
+						  }
+						  
+						  // If the count down is finished, write some text 
+						  if (distance < 0 ) {
+						  	document.getElementById('delete-note-button').click();
+							
+						  }
+						}, 1000);
+						</script>
+						
+						</form>
+					</div>
+
+			";
 			
 		}
 		echo "</div>";

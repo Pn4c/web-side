@@ -1,6 +1,6 @@
 
 <?php
-
+	if(!function_exists('follow_button')){
 	function follow_button($searched_user){
 		include '../static/database/database_connect.php';
 		$NickName = $_COOKIE['NickName'];
@@ -158,6 +158,7 @@
 			return "/static/images/person.png";
 		}
 		
+	}
 	}
 	
 ?>

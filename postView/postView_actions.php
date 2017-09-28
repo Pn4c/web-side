@@ -54,7 +54,11 @@
 								';
 							}
 						?>
-						<div class="panel-heading" style="text-align:right;background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);"><?php echo date('H:i | d-m-Y', $date); ?></div>
+						
+						<div class="panel-heading" style="background-color: rgba(<?php echo $colors[$each_data['Feeling']] ?>,0.5);">
+							<p style="text-align:left;float:left;"><?php echo num_comment($postID); ?> <?php echo $lang['comment']?></p>
+							<p style="text-align:right;"><?php echo date('H:i | d-m-Y', $date); ?></p>
+						</div>
 						
 					</div>
 					
@@ -65,6 +69,24 @@
 	
 		}
 
+	}
+	
+	function num_comment($postID){
+		include '../static/database/database_connect.php';
+		
+		$sql = "SELECT * FROM comments WHERE `PostID` = '$postID'; ";
+		$result = mysqli_query($db, $sql);
+		
+		$num_comment = 0;
+		if(mysqli_num_rows($result) > 0){
+			while($each_data = mysqli_fetch_assoc($result)){
+				$num_comment += 1;
+			}
+			return $num_comment;
+		}
+		else{
+			return 0;
+		}
 	}
 
 	function show_comments(){
@@ -103,7 +125,7 @@
 								
 								<div class="col-md-10">
 									<?php $date = strtotime($each_comment['Date']) ?>
-									<div class="panel-body" style="padding:1% 1%;"><div style=""><?php echo $each_comment['Content']; ?></div><div class="pull-right" style=""><?php echo date('H:i \, j F Y', $date); ?></div></div>
+									<div class="panel-body" style="padding:1% 1%;"><div style=""><?php echo $each_comment['Content']; ?></div><div class="pull-right" style=""><?php echo date('H:i | j F Y', $date); ?></div></div>
 								</div>
 								
 							</div>

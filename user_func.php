@@ -18,8 +18,20 @@
 			}
 		}
 		
+		if(count($feelings) != 0){
+			//find which feelings is much more felt.
+			$feelings_index = array_flip($feelings);
+			$top_feeling = $feelings_index[max($feelings)];
+
+			return $top_feeling;
+		}
+		else{
+			return "Null";
+		}
+	}
+
+	function last_feeling($nickName){
 		
-		return "Lonely";
 	}
 
 	function getProfileImage($nickname){

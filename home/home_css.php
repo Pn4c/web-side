@@ -81,3 +81,22 @@ body{
 		transform: translateY(0%);
   	}
 }
+#posts{
+	-webkit-animation: suggestToPanel 1s 1;
+}
+#suggestToPanel{
+	-webkit-animation: suggestToPanel 1s 1;
+	-webkit-animation: spin 1s 1;
+}
+@-webkit-keyframes suggestToPanel{
+	from {
+		opacity:0;
+  	 }
+
+	to {
+		opacity:1;
+	}
+}
+@-webkit-keyframes spin {
+	from { -webkit-transform: rotateY(0)}
+	to   { -webkit-transform: rotateY(-360deg)}}

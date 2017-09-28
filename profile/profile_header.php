@@ -10,7 +10,12 @@
 <header style="font-size: 13px;font-family:<?php echo $font_family;?>;">
 		<div class="row">
 			<div class="col-md-2 col-md-offset-5">
-				<div class="brand" style="opacity:1;"><img style="width:140px;height:140px;margin:30px;margin-bottom:0px;border-radius:70px;" src="<?php echo profileImage(); ?>"></div>
+				<?php
+					if (!function_exists('getProfileImage')){
+						include "../user_func.php";
+					}
+				?>
+				<div class="brand" style="opacity:1;"><img style="width:140px;height:140px;margin:30px;margin-bottom:0px;border-radius:70px;" src="<?php echo getProfileImage($_COOKIE['NickName']); ?>"></div>
 			
 				<form method="POST" id="form-post" enctype="multipart/form-data">
 					<div class="panel-heading" >
@@ -28,11 +33,11 @@
 			<div class="col-md-4 col-md-offset-8">
 				<div class="panel panel-default" style="border:0px;">
 					<div class="panel-heading pull-right" style="border:0px;background:rgba(0,0,0,0);">
-						<h5><?php echo num_follow($_COOKIE['NickName']) . " " . $lang['follows'];?> </h5>
+						<h5><?php echo num_follow2($_COOKIE['NickName']) . " " . $lang['follows'];?> </h5>
 					</div>
 					
 					<div class="panel-heading pull-right" style="border:0px;background:rgba(0,0,0,0);">
-						<h5><?php echo num_follower($_COOKIE['NickName']) . " " . $lang['followers'];?></h5>
+						<h5><?php echo num_follower2($_COOKIE['NickName']) . " " . $lang['followers'];?></h5>
 					</div>
 				</div>
 			</div>
@@ -53,8 +58,9 @@
 		$nickName = $_COOKIE['NickName'];
 		header("location:../profile_others/profile_other.php?u=$nickName");
 	}
-
-	function num_follow($searched_user){
+	
+	
+	function num_follow2($searched_user){
 		include "../static/database/database_connect.php";
 		$NickName = $searched_user;
 
@@ -73,7 +79,7 @@
 		return count($followeds);
 	}
 
-	function num_follower($searched_user){
+	function num_follower2($searched_user){
 		include "../static/database/database_connect.php";
 		$NickName = $searched_user;
 
@@ -95,18 +101,6 @@
 		}
 		 
 		return $counter;
-	}
-	
-	function profileImage(){
-		$image = "../static/profileImages/" . $_COOKIE['NickName'];
-		
-		if (file_exists($image)){
-			return $image;
-		}
-		else{
-			return "/static/images/person.png";
-		}
-		
 	}
 
 	if (isset($_FILES['fileToUpload']['name'])){

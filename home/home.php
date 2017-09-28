@@ -38,11 +38,10 @@
 		</div>
 
 		<div class="col-md-5 col-xs-5" id="posts">
+			<?php $_SESSION['suggestedUsers'] = array(); ?>
+			
 			<br />
-
-			<?php include "../suggestion/suggest.php"; ?>
-			<?php suggestTo("d0lph1n"); ?>
-			<br />
+			
 			<?php show_posts(); ?>
 		</div>
 
