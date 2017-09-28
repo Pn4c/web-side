@@ -94,9 +94,10 @@
 		$NoteContent = mysqli_real_escape_string($db, $_POST['input_content']);
 		$NoteDate = date('Y-m-d H:i:s');
 		
-		if ($NoteContent != '' and $NickName!=''){
-			if(isset($_POST['noteDateCheck'])){
+		if ($NoteContent != ''){
+			if(isset($_POST['noteDateCheck']) and ){
 				$EndingDate = $_POST['noteDateTime'];
+				if ()
 				$sql = "INSERT INTO `notes` (`UserNickName`, `Content`, `Date`, `EndingDate`) VALUES ('$NickName', '$NoteContent' , '$NoteDate', '$EndingDate')";
 			}
 			else{
