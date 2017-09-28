@@ -97,7 +97,8 @@
 		if ($NoteContent != ''){
 			if(isset($_POST['noteDateCheck']) and ){
 				$EndingDate = $_POST['noteDateTime'];
-				if ()
+				if (){
+				}
 				$sql = "INSERT INTO `notes` (`UserNickName`, `Content`, `Date`, `EndingDate`) VALUES ('$NickName', '$NoteContent' , '$NoteDate', '$EndingDate')";
 			}
 			else{
